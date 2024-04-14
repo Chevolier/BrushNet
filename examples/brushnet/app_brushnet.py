@@ -30,14 +30,18 @@ image_examples = [
 # choose the base model here
 base_model_path = "data/ckpt/realisticVisionV60B1_v51VAE"
 # base_model_path = "runwayml/stable-diffusion-v1-5"
+# base_model_path = "data/ckpt/sd15_urbanicv2"
 
 # input brushnet ckpt path
-brushnet_path = "data/ckpt/segmentation_mask_brushnet_ckpt"
+# brushnet_path = "data/ckpt/segmentation_mask_brushnet_ckpt"
+brushnet_path = "data/ckpt/random_mask_brushnet_ckpt"
 
 brushnet = BrushNetModel.from_pretrained(brushnet_path, torch_dtype=torch.float16)
 pipe = StableDiffusionBrushNetPipeline.from_pretrained(
     base_model_path, brushnet=brushnet, torch_dtype=torch.float16, low_cpu_mem_usage=False
 )
+
+# pipe = StableDiffusionBrushNetPipeline.from_single_file(base_model_path, brushnet=brushnet, torch_dtype=torch.float16, low_cpu_mem_usage=False)
 
 # speed up diffusion process with faster scheduler and memory optimization
 pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config)
@@ -122,6 +126,7 @@ def process(input_image,
         mask = 1-(1-mask) * (1-mask_blurred)
         for image_i in image:
             image_np=np.array(image_i)
+            print(f"original_image shape: {original_image.shape}, image_np shape: {image_np.shape}, mask shape: {mask.shape}")
             image_pasted=original_image * (1-mask) + image_np*mask
 
             image_pasted=image_pasted.astype(image_np.dtype)
@@ -229,7 +234,7 @@ with block:
         example = gr.Examples(
             label="Input Example",
             examples=image_examples,
-            inputs=[input_image, prompt, input_mask, original_image, selected_points,result_gallery],
+            inputs=[input_image, prompt, input_mask, original_image, selected_points, result_gallery],
             outputs=[input_image, prompt, input_mask, original_image, selected_points],
             fn=process_example,
             run_on_click=True,
@@ -329,4 +334,4 @@ with block:
     run_button.click(fn=process, inputs=ips, outputs=[result_gallery])
 
 
-block.launch(server_name="0.0.0.0",share=False,server_port=12345)
+block.launch(server_name="0.0.0.0",share=True,server_port=12346)
