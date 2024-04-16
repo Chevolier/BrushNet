@@ -44,11 +44,10 @@ if __name__ == "__main__":
     
     # MODEL_NAME="CompVis/stable-diffusion-v1-4"
     # dataset_name="lambdalabs/pokemon-blip-captions"
-    os.system("pip install -r requirements_sdxl.txt")
+    # os.system("pip install -r requirements_brushnet.txt")
     
     os.system("wandb disabled")
     # use different xxx.sh to train different model
-    os.system("chmod +x ./train_text_to_image_sdxl_v2.sh")
+    os.system("chmod +x ./train_brushnet.sh")
     os.system("chmod +x ./s5cmd")
-    os.system("/bin/bash -c ./train_text_to_image_sdxl_v2.sh")
-    
+    os.system("/bin/bash -c ./train_brushnet.sh")

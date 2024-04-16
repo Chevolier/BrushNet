@@ -23,3 +23,5 @@ accelerate launch --config_file as_local_config.yaml train_text_to_image_sdxl_v2
   --validation_epochs 1000000 \
   --checkpointing_steps=50 \
   --output_dir=$OUTPUT_DIR 
+  
+  

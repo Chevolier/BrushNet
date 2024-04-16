@@ -178,3 +178,7 @@ tags
 wandb
 
 *.tar
+*.safetensors
+*.out
+
+ckpt/
