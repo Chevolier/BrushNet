@@ -1,5 +1,4 @@
 compute_environment: LOCAL_MACHINE
-debug: false
 deepspeed_config:
   deepspeed_multinode_launcher: standard # used for multiple nodes training
   gradient_accumulation_steps: 4
@@ -11,7 +10,6 @@ distributed_type: DEEPSPEED
 downcast_bf16: 'no'
 machine_rank: 0
 main_training_function: main
-mixed_precision: fp16
 num_machines: 2
 num_processes: 4 # number of all gpus 
 main_process_ip: 0.0.0.0

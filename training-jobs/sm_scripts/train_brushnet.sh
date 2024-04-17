@@ -18,8 +18,6 @@ git clone https://github.com/TencentARC/BrushNet.git
 
 # Then, you can install diffusers (implemented in this repo) with:
 
-# cd BrushNet
-
 pip install -e BrushNet
 
 # After that, you can install required packages thourgh:
@@ -28,23 +26,23 @@ pip install -r requirements_brushnet.txt
 
 chmod +x ./s5cmd
 
+# --config_file as_local_config.yaml
+# --resume_from_checkpoint latest \
+# --mixed_precision fp16 \
 
-# TRAIN_DIR=$TRAIN_DIR/pokeman_images
-
-accelerate launch train_brushnet.py \
+accelerate launch --config_file as_local_config.yaml train_brushnet.py \
 --pretrained_model_name_or_path models/realisticVisionV60B1_v51VAE \
 --brushnet_model_name_or_path models/random_mask_brushnet_ckpt \
 --output_dir ckpt/brushnet_ckpt \
 --train_data_dir data/heguan_reformed \
 --validation_image data/heguan_reformed/test_image.jpg \
 --validation_mask data/heguan_reformed/test_mask.jpg \
---num_train_epochs 50 \
+--num_train_epochs 10 \
 --resolution 512 \
 --learning_rate 1e-5 \
---train_batch_size 4 \
+--train_batch_size 2 \
 --tracker_project_name brushnet \
 --report_to tensorboard \
---resume_from_checkpoint latest \
 --validation_steps 1000 \
 --checkpointing_steps 1000 \
 --checkpoints_total_limit 1

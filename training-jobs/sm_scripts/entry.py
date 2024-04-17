@@ -28,7 +28,6 @@ if __name__ == "__main__":
     os.environ['NCCL_DEBUG'] = 'INFO'
     os.environ['HCCL_OVER_OFI'] = '1'
         
-        
     file_name = './accelerate_config.yaml'
     with open(file_name) as f:
         doc = yaml.safe_load(f)
