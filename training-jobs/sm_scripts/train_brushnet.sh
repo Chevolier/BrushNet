@@ -34,18 +34,17 @@ chmod +x ./s5cmd
 accelerate launch train_brushnet.py \
 --pretrained_model_name_or_path models/realisticVisionV60B1_v51VAE \
 --brushnet_model_name_or_path models/random_mask_brushnet_ckpt \
---output_dir $OUTPUT_DIR \
+--output_dir ckpt/brushnet_ckpt \
 --train_data_dir data/heguan_reformed \
 --validation_image data/heguan_reformed/test_image.jpg \
 --validation_mask data/heguan_reformed/test_mask.jpg \
---num_train_epochs 2 \
---resolution 256 \
+--num_train_epochs 50 \
+--resolution 512 \
 --learning_rate 1e-5 \
---train_batch_size 2 \
---num_per_tar_file 500 \
+--train_batch_size 4 \
 --tracker_project_name brushnet \
 --report_to tensorboard \
 --resume_from_checkpoint latest \
---validation_steps 500 \
---checkpoints_total_limit 5 \
---checkpointing_steps 1000
+--validation_steps 1000 \
+--checkpointing_steps 1000 \
+--checkpoints_total_limit 1

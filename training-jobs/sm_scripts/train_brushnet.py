@@ -316,7 +316,7 @@ def parse_args(input_args=None):
         "--train_batch_size", type=int, default=4, help="Batch size (per device) for the training dataloader."
     )
     parser.add_argument("--num_train_epochs", type=int, default=10)
-    parser.add_argument("--num_per_tar_file", type=int, default=10, help="number of examples in each tar file in the training data")
+    # parser.add_argument("--num_per_tar_file", type=int, default=10, help="number of examples in each tar file in the training data")
     parser.add_argument(
         "--max_train_steps",
         type=int,
@@ -944,8 +944,6 @@ class MyWebDataset():
 
 def main(args):
     
-    
-    
     if args.report_to == "wandb" and args.hub_token is not None:
         raise ValueError(
             "You cannot use both --report_to=wandb and --hub_token due to a security risk of exposing your token."
@@ -1165,7 +1163,7 @@ def main(args):
         batch_size=args.train_batch_size,
         num_workers=args.dataloader_num_workers,
     )
-    train_dataloader_len=train_dataset_len//args.train_batch_size
+    train_dataloader_len=train_dataset_len//(args.train_batch_size)
 
     # Scheduler and math around the number of training steps.
     overrode_max_train_steps = False
@@ -1376,8 +1374,8 @@ def main(args):
                         accelerator.save_state(save_path)
                         logger.info(f"Saved state to {save_path}")
                         
-                        persistant_path = os.environ['OUTPUT_MODEL_S3_PATH'] + f"checkpoint-{global_step}" + '/'
-                        os.system("./s5cmd sync {0} {1}".format(args.output_dir, persistant_path))
+                        persistant_path = os.environ['OUTPUT_MODEL_S3_PATH'] # + f"checkpoint-{global_step}" + '/'
+                        os.system("./s5cmd sync {0} {1}".format(save_path, persistant_path))
 
                     if args.validation_prompt is not None and global_step % args.validation_steps == 0:
                         image_logs = log_validation(
@@ -1444,9 +1442,6 @@ def main(args):
 
 
 if __name__ == "__main__":
-    # LOCAL_RANK = int(os.environ['NODE_INDEX'])
-    # WORLD_SIZE = int(os.environ['WORLD_SIZE'])
-    # WORLD_RANK = int(os.environ['RANK'])
     
     args = parse_args()
     main(args)

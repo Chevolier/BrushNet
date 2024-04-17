@@ -34,7 +34,10 @@ base_model_path = "data/ckpt/realisticVisionV60B1_v51VAE"
 
 # input brushnet ckpt path
 # brushnet_path = "data/ckpt/segmentation_mask_brushnet_ckpt"
-brushnet_path = "data/ckpt/random_mask_brushnet_ckpt"
+# brushnet_path = "data/ckpt/random_mask_brushnet_ckpt"
+# brushnet_path = "data/ckpt/checkpoint-6000"
+# brushnet_path = "data/ckpt/checkpoint-2000-p4d"
+brushnet_path = "data/ckpt/checkpoint-10000-p4d"
 
 brushnet = BrushNetModel.from_pretrained(brushnet_path, torch_dtype=torch.float16)
 pipe = StableDiffusionBrushNetPipeline.from_pretrained(
