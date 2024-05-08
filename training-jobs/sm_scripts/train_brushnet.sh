@@ -29,20 +29,25 @@ chmod +x ./s5cmd
 # --config_file as_local_config.yaml
 # --resume_from_checkpoint latest \
 # --mixed_precision fp16 \
+# --brushnet_model_name_or_path models/random_mask_brushnet_ckpt \
+# --config_file as_local_config.yaml
+# 
+# 
 
-accelerate launch --config_file as_local_config.yaml train_brushnet.py \
+accelerate launch train_brushnet.py \
 --pretrained_model_name_or_path models/realisticVisionV60B1_v51VAE \
 --brushnet_model_name_or_path models/random_mask_brushnet_ckpt \
 --output_dir ckpt/brushnet_ckpt \
 --train_data_dir data/heguan_reformed \
 --validation_image data/heguan_reformed/test_image.jpg \
 --validation_mask data/heguan_reformed/test_mask.jpg \
---num_train_epochs 10 \
+--num_train_epochs 400 \
 --resolution 512 \
 --learning_rate 1e-5 \
---train_batch_size 2 \
+--train_batch_size 4 \
 --tracker_project_name brushnet \
 --report_to tensorboard \
---validation_steps 1000 \
---checkpointing_steps 1000 \
---checkpoints_total_limit 1
+--validation_steps 2000 \
+--checkpointing_steps 2000 \
+--checkpoints_total_limit 1 \
+--resume_from_checkpoint latest 

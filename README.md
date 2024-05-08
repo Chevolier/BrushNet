@@ -64,9 +64,10 @@ git clone https://github.com/TencentARC/BrushNet.git
 
 We recommend you first use `conda` to create virtual environment, and install `pytorch` following [official instructions](https://pytorch.org/). For example:
 
+conda create -n diffusers python=3.9 -y
 
 ```
-conda create -n diffusers python=3.9 -y
+conda create -p /home/ec2-user/SageMaker/efs/conda_envs/diffusers python=3.9 -y
 conda activate diffusers
 python -m pip install --upgrade pip
 pip install torch==1.12.1+cu116 torchvision==0.13.1+cu116 torchaudio==0.12.1 --extra-index-url https://download.pytorch.org/whl/cu116
@@ -81,8 +82,7 @@ pip install -e .
 After that, you can install required packages thourgh:
 
 ```
-cd examples/brushnet/
-pip install -r requirements.txt
+pip install -r examples/brushnet/requirements.txt
 ```
 
 ### Data Download ⬇️

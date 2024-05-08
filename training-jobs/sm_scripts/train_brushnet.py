@@ -734,6 +734,11 @@ class MyWebDataset():
         
         for example in examples:
             caption=example["caption"].decode('utf-8')
+            
+            # # remove wrong color in the caption
+            # parts = [part.strip() for part in caption.split(',') if not 'color' in part]
+            # caption = ', '.join(parts)
+            
             height=int(example["height"].decode('utf-8'))
             width=int(example["width"].decode('utf-8'))
             image = cv2.imdecode(np.asarray(bytearray(example["image"]), dtype="uint8"), cv2.IMREAD_COLOR)
@@ -802,7 +807,7 @@ class MyWebDataset():
         return {
             "pixel_values": pixel_values,
             "conditioning_pixel_values": conditioning_pixel_values,
-            "masks":masks,
+            "masks": masks,
             "input_ids": input_ids,
         }
 
@@ -969,7 +974,8 @@ def main(args):
         os.system("./s5cmd sync {0}* {1}".format(os.environ['TRAIN_DATA_PATH'], args.train_data_dir))
         os.system("./s5cmd sync {0}* {1}".format(os.environ['BASE_MODEL_S3_PATH'], args.pretrained_model_name_or_path))
         os.system("./s5cmd sync {0}* {1}".format(os.environ['BRUSHNET_MODEL_S3_PATH'], args.brushnet_model_name_or_path))
-        # print(f'------rank {LOCAL_RANK} finished cp-------')
+        # download the latest checkpoint
+        os.system("./s5cmd sync {0}* {1}".format(os.environ['LATEST_CHECKPOINT_S3_PATH'], args.output_dir+'/checkpoint-60000')) 
     
     accelerator.wait_for_everyone()
     ############################
@@ -1275,7 +1281,6 @@ def main(args):
                 # Convert images to latent space
                 latents = vae.encode(batch["pixel_values"].to(dtype=weight_dtype)).latent_dist.sample()
                 latents = latents * vae.config.scaling_factor
-
                 conditioning_latents=vae.encode(batch["conditioning_pixel_values"].to(dtype=weight_dtype)).latent_dist.sample()
                 conditioning_latents = conditioning_latents * vae.config.scaling_factor
 

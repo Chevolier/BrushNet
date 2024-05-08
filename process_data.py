@@ -114,14 +114,14 @@ for image_file in tqdm(image_files[:num_images]):
     
     # Define the output dataset directory
     if count == 0:
-        output_dir = f"data/heguan-reformed/{tar_id:03d}.tar"
+        output_dir = f"data/heguan-reformed-wocolor/{tar_id:03d}.tar"
         writer = wds.TarWriter(output_dir)
         
     image_array = cv2.imread(os.path.join(image_folder, image_file))
 
     _, encoded_image = cv2.imencode('.jpg', image_array)
     byte_array = encoded_image.tobytes()
-    file_path = f"data/heguan-reformed/{image_file.split('.')[0]}"
+    file_path = f"data/heguan-reformed-wocolor/{image_file.split('.')[0]}"
     # with open(file_path + ".image", 'wb') as fout:
     #     fout.write(byte_array)
 

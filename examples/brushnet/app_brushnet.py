@@ -7,7 +7,7 @@ from PIL import Image
 import numpy as np
 from segment_anything import SamPredictor, sam_model_registry
 import torch
-from diffusers import StableDiffusionBrushNetPipeline, BrushNetModel, UniPCMultistepScheduler
+from diffusers import StableDiffusionBrushNetPipeline, BrushNetModel, UniPCMultistepScheduler, UNet2DConditionModel
 import random
 
 mobile_sam = sam_model_registry['vit_h'](checkpoint='data/ckpt/sam_vit_h_4b8939.pth').to("cuda")
@@ -28,18 +28,48 @@ image_examples = [
 
 
 # choose the base model here
-base_model_path = "data/ckpt/realisticVisionV60B1_v51VAE"
+# base_model_path = "data/ckpt/realisticVisionV60B1_v51VAE"
 # base_model_path = "runwayml/stable-diffusion-v1-5"
 # base_model_path = "data/ckpt/sd15_urbanicv2"
+base_model_path = "data/ckpt/Juggernaut-X-v10"
 
 # input brushnet ckpt path
 # brushnet_path = "data/ckpt/segmentation_mask_brushnet_ckpt"
 # brushnet_path = "data/ckpt/random_mask_brushnet_ckpt"
+brushnet_path = "data/ckpt/random_mask_brushnet_ckpt_sdxl_v0"
+
 # brushnet_path = "data/ckpt/checkpoint-6000"
 # brushnet_path = "data/ckpt/checkpoint-2000-p4d"
-brushnet_path = "data/ckpt/checkpoint-10000-p4d"
+# brushnet_path = "data/ckpt/checkpoint-18000-p4d"
+# brushnet_path = "data/ckpt/checkpoint-3000-urbanicv2"
+# brushnet_path = "data/ckpt/checkpoint-19k-randommask"
+# brushnet_path = "data/ckpt/ckpt-real-random-randommask-20k"
+# brushnet_path = "data/ckpt/ckpt-10k-real-random"
+
+# brushnet_path = "data/ckpt/ckpt-urbanic-random-custom-12k"
+# brushnet_path = "data/ckpt/ckpt-urbanic-random-custom-20k"
+# brushnet_path = "data/ckpt/ckpt-urbanic-random-custom-34k"
+# brushnet_path = "data/ckpt/ckpt-urbanic-random-custom-54k"
+# brushnet_path = "data/ckpt/ckpt-urbanic-random-custom-60k"
+# brushnet_path = "data/ckpt/ckpt-urbanic-random-custom-100k"
+
+# brushnet_path = "data/ckpt/ckpt-real-random-custom-20k"
+# brushnet_path = "data/ckpt/ckpt-real-random-custom-28k"
+# brushnet_path = "data/ckpt/ckpt-real-random-custom-40k"
+
+# brushnet_path = "data/ckpt/sd15_urbanicv2/unet"
+# brushnet_path = "data/ckpt/ckpt-urbanic-urbanic-custom-wocolor-2k"
+# brushnet_path = "data/ckpt/ckpt-urbanic-urbanic-custom-wocolor-10k"
+# brushnet_path = "data/ckpt/ckpt-urbanic-urbanic-custom-wocolor-18k"
+
 
 brushnet = BrushNetModel.from_pretrained(brushnet_path, torch_dtype=torch.float16)
+
+# unet = UNet2DConditionModel.from_pretrained(
+#         base_model_path, subfolder="unet", revision=None, variant=None, torch_dtype=torch.float32
+#     )
+# brushnet = BrushNetModel.from_unet(unet)
+
 pipe = StableDiffusionBrushNetPipeline.from_pretrained(
     base_model_path, brushnet=brushnet, torch_dtype=torch.float16, low_cpu_mem_usage=False
 )
@@ -151,7 +181,7 @@ with block:
             
             gr.HTML(f"""
                     <div style="text-align: center;">
-                        <h1>BrushNet: A Plug-and-Play Image Inpainting Model with Decomposed Dual-Branch Diffusion</h1>
+                        <h1>BrushNet: A Plug-and-Play Image Inpainting Model with Decomposed Dual-Branch Diffusion, base: {base_model_path}, brushnet: {brushnet_path}</h1>
                         <div style="display: flex; justify-content: center; align-items: center; text-align: center;">
                             <a href=""></a>
                             <a href='https://tencentarc.github.io/BrushNet/'><img src='https://img.shields.io/badge/Project_Page-BrushNet-green' alt='Project Page'></a>
@@ -166,7 +196,7 @@ with block:
         with gr.Row(equal_height=True):
             gr.Markdown("""
             - ⭐️ <b>step1: </b>Upload or select one image from Example
-            - ⭐️ <b>step2: </b>Click on Input-image to select the object to be retained (or upload a white-black Mask image, in which white color indicates the region you want to keep unchanged). You can tick the 'Invert Mask' box to switch region unchanged and change.
+            - ⭐️ <b>step2: </b>Click on Input-image to select the object to be retained (or upload a white-black Mask image, in which black color indicates the region you want to keep unchanged). You can tick the 'Invert Mask' box to switch region unchanged and change.
             - ⭐️ <b>step3: </b>Input prompt for generating new contents
             - ⭐️ <b>step4: </b>Click Run button
             """)                          
@@ -337,4 +367,4 @@ with block:
     run_button.click(fn=process, inputs=ips, outputs=[result_gallery])
 
 
-block.launch(server_name="0.0.0.0",share=True,server_port=12346)
+block.launch(server_name="0.0.0.0",share=True,server_port=12340)
