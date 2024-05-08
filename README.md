@@ -142,20 +142,6 @@ You can train with segmentation mask using the script:
 
 ```
 accelerate launch examples/brushnet/train_brushnet.py \
---pretrained_model_name_or_path /home/ec2-user/SageMaker/efs/Models/runwayml/stable-diffusion-v1-5 \
---output_dir runs/logs/brushnet_segmentationmask \
---train_data_dir data/BrushData \
---resolution 512 \
---learning_rate 1e-5 \
---train_batch_size 2 \
---tracker_project_name brushnet \
---report_to tensorboard \
---resume_from_checkpoint latest \
---validation_steps 300
-```
-
-```
-accelerate launch examples/brushnet/train_brushnet.py \
 --pretrained_model_name_or_path data/ckpt/realisticVisionV60B1_v51VAE \
 --brushnet_model_name_or_path data/ckpt/random_mask_brushnet_ckpt \
 --output_dir runs/logs/brushnet_segmentationmask \
@@ -188,7 +174,7 @@ accelerate launch examples/brushnet/train_brushnet.py \
 --random_mask
 ```
 
-
+#### To train using training jobs in amazon sagemaker, go to training-jobs folder and follow the steps in train.ipynb.
 
 ### Inference 📜
 

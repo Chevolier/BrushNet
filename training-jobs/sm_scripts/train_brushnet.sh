@@ -22,7 +22,7 @@ pip install -e BrushNet
 
 # After that, you can install required packages thourgh:
 
-pip install -r requirements_brushnet.txt
+pip install -r requirements.txt
 
 chmod +x ./s5cmd
 
